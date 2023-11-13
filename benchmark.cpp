@@ -1,11 +1,3 @@
-//
-// (C) 2021, E. Wes Bethel
-// benchmark-* harness for running different versions of vector-matrix multiply
-//    over different problem sizes
-//
-// usage: no command line arguments
-// set problem sizes in the code below
-
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
@@ -23,10 +15,9 @@ extern void my_dgemv(int, double*, double*, double *);
 extern const char* dgemv_desc;
 
 void reference_dgemv(int n, double* A, double* x, double *y) {
-   double alpha=1.0, beta=1.0;
-   int lda=n, incx=1, incy=1;
-    // cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, n, n, n, alpha, A, n, B, n, 1., C, n);
-    cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, alpha, A, lda, x, incx, beta, y, incy);
+   double alpha = 1.0, beta = 1.0;
+   int lda = n, incx = 1, incy = 1;
+   cblas_dgemv(CblasRowMajor, CblasNoTrans, n, n, alpha, A, lda, x, incx, beta, y, incy);
 }
 
 void fill(double* p, int n) {
@@ -39,16 +30,15 @@ void fill(double* p, int n) {
 
 bool check_accuracy(double *A, double *Anot, int nvalues)
 {
-  double eps = 1e-5;
-  for (size_t i = 0; i < nvalues; i++) 
-  {
-    if (fabsf(A[i] - Anot[i]) > eps) {
-       return false;
+    double eps = 1e-5;
+    for (size_t i = 0; i < nvalues; i++) 
+    {
+        if (fabsf(A[i] - Anot[i]) > eps) {
+            return false;
+        }
     }
-  }
-  return true;
+    return true;
 }
-
 
 /* The benchmarking program */
 int main(int argc, char** argv) 
@@ -77,7 +67,7 @@ int main(int argc, char** argv)
     double* Y = Xcopy + max_size;
     double* Ycopy = Y + max_size;
 
-           // load up matrics with some random numbers
+    // load up matrices with some random numbers
     /* For each test size */
     for (int n : test_sizes) 
     {
@@ -108,11 +98,15 @@ int main(int argc, char** argv)
         // Print out the elapsed time for this problem size
         std::cout << "Elapsed time for N=" << n << ": " << duration.count() << " ms" << std::endl;
         std::cout << "MFLOP/s for N=" << n << ": " << mflops << "\n";
-        double bandwidth_utilization = (2 * n * n + 4 * n) * sizeof(double) / (duration.count() * max_size * max_size * sizeof(double));
+
+        // Calculate memory bandwidth utilization
+        size_t bytes_accessed = (2 * n * n + 4 * n) * sizeof(double);
+        double bandwidth_utilization = (bytes_accessed / duration.count()) / (max_size * max_size * sizeof(double));
 
         // Output the result
-        std::cout << " Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
-        // now invoke the cblas method to compute the matrix-vector multiplye
+        std::cout << "Memory Bandwidth Utilization for N=" << n << ": " << bandwidth_utilization * 100 << "%" << std::endl;
+
+        // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
         // compare your result with that computed by BLAS
