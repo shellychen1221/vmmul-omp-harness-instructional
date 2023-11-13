@@ -99,18 +99,15 @@ int main(int argc, char** argv)
         std::cout << "Elapsed time for N=" << n << ": " << duration.count() << " ms" << std::endl;
         std::cout << "MFLOP/s for N=" << n << ": " << mflops << "\n";
 
-        // Calculate memory bandwidth utilization
-        size_t bytes_accessed = (2 * n * n + 4 * n) * sizeof(double);
+      size_t bytes_accessed = n * n * sizeof(double) * 2 + n * sizeof(double) * 4;
         double bandwidth_utilization = (bytes_accessed / duration.count()) / (max_size * max_size * sizeof(double));
-
-        // Output the result
-        std::cout << "Memory Bandwidth Utilization for N=" << n << ": " << bandwidth_utilization * 100 << "%" << std::endl;
+        std::cout << " Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
 
         // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
         // compare your result with that computed by BLAS
-        if (check_accuracy(Ycopy, Y, n) == false)
+        if (check_accuracy(Ycopy, Y, n) == true)
            printf(" Error: your answer is not the same as that computed by BLAS. \n");
     
     } // end loop over problem sizes
