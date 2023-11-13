@@ -93,13 +93,25 @@ int main(int argc, char** argv)
         memcpy((void *)Ycopy, (const void *)Y, sizeof(double)*n);
 
         // insert start timer code here
-
+        auto start_time = std::chrono::high_resolution_clock::now();
         // call the method to do the work
         my_dgemv(n, A, X, Y); 
 
         // insert end timer code here, and print out the elapsed time for this problem size
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
+        // Calculate MFLOP/s
+        double num_operations = 2.0 * n * n;  // Assuming 2n^2 floating-point operations
+        double mflops = (num_operations / duration.count()) / 1e6;
 
+        // Print out the elapsed time for this problem size
+        std::cout << "Elapsed time for N=" << n << ": " << duration.count() << " ms" << std::endl;
+        std::cout << "MFLOP/s for N=" << n << ": " << mflops << "\n";
+        double bandwidth_utilization = (2 * n * n + 4 * n) * sizeof(double) / (duration.count() * max_size * max_size * sizeof(double));
+
+        // Output the result
+        std::cout << " Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
         // now invoke the cblas method to compute the matrix-vector multiplye
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
