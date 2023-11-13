@@ -82,26 +82,27 @@ int main(int argc, char** argv)
         memcpy((void *)Xcopy, (const void *)X, sizeof(double)*n);
         memcpy((void *)Ycopy, (const void *)Y, sizeof(double)*n);
 
-        // insert start timer code here
-        auto start_time = std::chrono::high_resolution_clock::now();
-        // call the method to do the work
-        my_dgemv(n, A, X, Y); 
+      // insert start timer code here
+        std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
 
-        // insert end timer code here, and print out the elapsed time for this problem size
-        auto end_time = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        // call the method to do the work
+        my_dgemv(n, A, X, Y);
+
+        // insert end timer code here, and print out the duration time for this problem size
+        std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_time - start_time;
 
         // Calculate MFLOP/s
         double num_operations = 2.0 * n * n;  // Assuming 2n^2 floating-point operations
         double mflops = (num_operations / duration.count()) / 1e6;
 
-        // Print out the elapsed time for this problem size
-        std::cout << "Elapsed time for N=" << n << ": " << duration.count() << " ms" << std::endl;
+        // Print out the duration time for this problem size
+        std::cout << "duration time for N=" << n << ": " << duration.count() << " ms" << std::endl;
         std::cout << "MFLOP/s for N=" << n << ": " << mflops << "\n";
 
       size_t bytes_accessed = n * n * sizeof(double) * 2 + n * sizeof(double) * 4;
-        double bandwidth_utilization = (bytes_accessed / duration.count()) / (max_size * max_size * sizeof(double));
-        std::cout << " Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
+    double bandwidth_utilization = (static_cast<double>(bytes_accessed) / duration.count()) / max_size;  // Corrected calculation
+    std::cout << "Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
 
         // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
