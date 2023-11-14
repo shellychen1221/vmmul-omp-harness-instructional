@@ -92,19 +92,8 @@ int main(int argc, char** argv)
         std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = end_time - start_time;
 
-        // Calculate MFLOP/s
-        double num_operations = 2.0 * n * n;  // Assuming 2n^2 floating-point operations
-        double mflops = (num_operations / duration.count()) / 1e6;
-        double bytes = n * sizeof(uint64_t);
-
-        // Print out the duration time for this problem size
-        double capacity = 204.8; // Theoretical peak memory bandwidth in GB/s
-        // Calculate memory bandwidth utilization (in GB/s)
-        double memory_bandwidth_utilized = ((bytes / (duration.count() * 1e9)) / capacity) * 100.0;
         std::cout << " Elapsed time is : " << duration.count() << " seconds" << std::endl;
-        std::cout << " MFLOP/s: " << mflops << std::endl;
-        std::cout << " Memory bandwidth utilization: " << memory_bandwidth_utilized << "%" << std::endl;
-
+        
         // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
