@@ -16,18 +16,20 @@ void my_dgemv(int n, double* A, double* x, double* y) {
 
         for (int j = 0; j < n; j += 4) {
             // Load 4 elements at a time using AVX
-            __m256d A_vec = _mm256_load_pd(&A_row[j]);
-            __m256d x_vec = _mm256_load_pd(&x[j]);
+            __m256d A_vec = _mm256_loadu_pd(&A_row[j]);  // Use loadu to handle potential misalignment
+
+            // Load 4 elements from x using AVX
+            __m256d x_vec = _mm256_loadu_pd(&x[j]);
 
             // Multiply and accumulate
             __m256d result = _mm256_mul_pd(A_vec, x_vec);
-            acc[0] += result[0];
-            acc[1] += result[1];
-            acc[2] += result[2];
-            acc[3] += result[3];
+            __m128d result128 = _mm_add_pd(_mm256_extractf128_pd(result, 0), _mm256_extractf128_pd(result, 1));
+
+            acc[0] += result128[0];
+            acc[1] += result128[1];
         }
     }
 
     // Accumulate the results into the output vector y
-    y[0] += acc[0] + acc[1] + acc[2] + acc[3];
+    y[0] += acc[0] + acc[1];
 }
