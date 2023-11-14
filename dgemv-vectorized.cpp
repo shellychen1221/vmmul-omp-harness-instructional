@@ -11,7 +11,6 @@ void my_dgemv(int n, double* A, double* x, double* y) {
     alignas(32) double acc[4] = {0.0};  // Assuming AVX width of 4
 
     for (int i = 0; i < n; ++i) {
-
         double* A_row = &A[i * n];
 
         // Unroll the loop to better facilitate vectorization
@@ -20,17 +19,19 @@ void my_dgemv(int n, double* A, double* x, double* y) {
             __m256d x_vec = _mm256_loadu_pd(&x[j]);
 
             __m256d result = _mm256_mul_pd(A_vec, x_vec);
-            __m128d result128 = _mm_add_pd(_mm256_extractf128_pd(result, 0), _mm256_extractf128_pd(result, 1));
-
-            acc[0] += result128[0];
-            acc[1] += result128[1];
+            acc[0] += result[0];
+            acc[1] += result[1];
+            acc[2] += result[2];
+            acc[3] += result[3];
         }
 
         // Accumulate the results into the output vector y
-        y[i] += acc[0] + acc[1];
+        y[i] += acc[0] + acc[1] + acc[2] + acc[3];
 
         // Reset accumulator for the next iteration
         acc[0] = 0.0;
         acc[1] = 0.0;
+        acc[2] = 0.0;
+        acc[3] = 0.0;
     }
 }
