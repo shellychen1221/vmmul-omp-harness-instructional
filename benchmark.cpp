@@ -109,7 +109,7 @@ int main(int argc, char** argv)
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
         // compare your result with that computed by BLAS
-        if (check_accuracy(Ycopy, Y, n) == true)
+        if (check_accuracy(Ycopy, Y, n) == false)
             printf(" Error: your answer is not the same as that computed by BLAS. \n");
     
     } // end loop over problem sizes
