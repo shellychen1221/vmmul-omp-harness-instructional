@@ -100,7 +100,7 @@ int main(int argc, char** argv)
         // Print out the duration time for this problem size
         double capacity = 204.8; // Theoretical peak memory bandwidth in GB/s
         // Calculate memory bandwidth utilization (in GB/s)
-        double memory_bandwidth_utilized = (bytes / (duration.count() * 1e9)) / capacity * 100.0;
+        double memory_bandwidth_utilized = ((bytes / (duration.count() * 1e9)) / capacity) * 100.0;
         std::cout << " Elapsed time is : " << duration.count() << " seconds" << std::endl;
         std::cout << " MFLOP/s: " << mflops << std::endl;
         std::cout << " Memory bandwidth utilization: " << memory_bandwidth_utilized << "%" << std::endl;
