@@ -1,1 +1,1 @@
-/usr/bin/c++ -I /usr/include/aarch64-linux-gnu -O0 CMakeFiles/benchmark-basic.dir/dgemv-basic.cpp.o CMakeFiles/benchmark.dir/benchmark.cpp.o -o benchmark-basic  /usr/lib/aarch64-linux-gnu/libopenblas.so 
+/opt/cray/pe/craype/2.7.20/bin/CC -O0 CMakeFiles/benchmark-basic.dir/dgemv-basic.cpp.o CMakeFiles/benchmark.dir/benchmark.cpp.o -o benchmark-basic 

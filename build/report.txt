@@ -1,0 +1,7 @@
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:11:23: missed: couldn't vectorize loop
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:14:32: missed: not vectorized: complicated access pattern.
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:13:27: optimized: loop vectorized using 32 byte vectors
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:13:27: optimized: loop vectorized using 16 byte vectors
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:9:6: note: vectorized 1 loops in function.
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:18:1: note: ***** Analysis failed with vector mode V4DF
+/global/homes/h/hsinyu12/vmmul-omp-harness-instructional/dgemv-vectorized.cpp:18:1: note: ***** Skipping vector mode V32QI, which would repeat the analysis for V4DF
