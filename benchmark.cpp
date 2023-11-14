@@ -95,21 +95,24 @@ int main(int argc, char** argv)
         // Calculate MFLOP/s
         double num_operations = 2.0 * n * n;  // Assuming 2n^2 floating-point operations
         double mflops = (num_operations / duration.count()) / 1e6;
+        double bytes = n * sizeof(uint64_t);
 
         // Print out the duration time for this problem size
-        std::cout << "duration time for N=" << n << ": " << duration.count() << " ms" << std::endl;
-        std::cout << "MFLOP/s for N=" << n << ": " << mflops << "\n";
+        double capacity = 204.8; // Theoretical peak memory bandwidth in GB/s
+        // Calculate memory bandwidth utilization (in GB/s)
+        double memory_bandwidth_utilized = (bytes / (duration.count() * 1e9)) / capacity * 100.0;
+        std::cout << " Elapsed time is : " << duration.count() << " seconds" << std::endl;
+        std::cout << " MFLOP/s: " << mflops << std::endl;
+        std::cout << "Memory bandwidth utilization: " << memory_bandwidth_utilized << "%" << std::endl;
 
-      size_t bytes_accessed = n * n * sizeof(double) * 2 + n * sizeof(double) * 4;
-    double bandwidth_utilization = (static_cast<double>(bytes_accessed) / duration.count()) / max_size;  // Corrected calculation
-    std::cout << "Memory Bandwidth Utilization: " << bandwidth_utilization * 100 << "%" << std::endl;
+  
 
         // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
 
         // compare your result with that computed by BLAS
         if (check_accuracy(Ycopy, Y, n) == true)
-           printf(" Error: your answer is not the same as that computed by BLAS. \n");
+            printf(" Error: your answer is not the same as that computed by BLAS. \n");
     
     } // end loop over problem sizes
 
