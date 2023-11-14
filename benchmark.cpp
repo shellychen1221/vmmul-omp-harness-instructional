@@ -103,9 +103,7 @@ int main(int argc, char** argv)
         double memory_bandwidth_utilized = (bytes / (duration.count() * 1e9)) / capacity * 100.0;
         std::cout << " Elapsed time is : " << duration.count() << " seconds" << std::endl;
         std::cout << " MFLOP/s: " << mflops << std::endl;
-        std::cout << "Memory bandwidth utilization: " << memory_bandwidth_utilized << "%" << std::endl;
-
-  
+        std::cout << " Memory bandwidth utilization: " << memory_bandwidth_utilized << "%" << std::endl;
 
         // now invoke the cblas method to compute the matrix-vector multiply
         reference_dgemv(n, Acopy, Xcopy, Ycopy);
