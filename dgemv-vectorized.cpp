@@ -8,8 +8,6 @@ const char* dgemv_desc = "Vectorized implementation of matrix-vector multiply.";
  * On exit, A and X maintain their input values.
  */
 void my_dgemv(int n, double* A, double* x, double* y) {
-    alignas(32) double acc[4] = {0.0};  // Assuming AVX width of 4
-
     for (int i = 0; i < n; ++i) {
         __m256d sum = _mm256_setzero_pd();
 
